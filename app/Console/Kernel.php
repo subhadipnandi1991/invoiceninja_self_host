@@ -34,7 +34,7 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        //
+        Commands\CreateMyAccount::class
     ];
 
     /**
@@ -61,8 +61,8 @@ class Kernel extends ConsoleKernel
         $schedule->job(new SubscriptionCron)->daily()->withoutOverlapping();
 
         $schedule->job(new RecurringInvoicesCron)->hourly()->withoutOverlapping();
-        
-        $schedule->job(new AutoBillCron)->dailyAt('00:30')->withoutOverlapping();        
+
+        $schedule->job(new AutoBillCron)->dailyAt('00:30')->withoutOverlapping();
 
         $schedule->job(new SchedulerCheck)->everyFiveMinutes();
 
@@ -78,8 +78,8 @@ class Kernel extends ConsoleKernel
         if(config('queue.default') == 'database' && Ninja::isSelfHost() && config('ninja.internal_queue_enabled') && !config('ninja.is_docker')) {
 
             $schedule->command('queue:work')->everyMinute()->withoutOverlapping();
-            $schedule->command('queue:restart')->everyFiveMinutes()->withoutOverlapping(); 
-            
+            $schedule->command('queue:restart')->everyFiveMinutes()->withoutOverlapping();
+
         }
 
     }
