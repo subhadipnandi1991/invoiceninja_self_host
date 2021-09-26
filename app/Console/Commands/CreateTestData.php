@@ -42,6 +42,7 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Hash;
 
 class CreateTestData extends Command
 {
@@ -83,9 +84,23 @@ class CreateTestData extends Command
 
         $this->warmCache();
 
-        $this->createSmallAccount();
-        $this->createMediumAccount();
-        $this->createLargeAccount();
+        // $this->createSmallAccount();
+        // $this->createMediumAccount();
+        // $this->createLargeAccount();
+        $this->createPassword();
+    }
+
+    private function createPassword() {
+
+      $user = User::whereEmail('medium@example.com')->first();
+      // dd($user);
+
+      if($user) {
+        $this->info('Updating Password for Medium Account');
+
+        $user->password = Hash::make('Password2');
+        $user->save();
+      }
     }
 
     private function createSmallAccount()
