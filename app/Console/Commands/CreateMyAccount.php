@@ -21,7 +21,7 @@ class CreateMyAccount extends Command
      *
      * @var string
      */
-    protected $signature = 'create-my-account';
+    protected $signature = 'create-my-account {email?} {password?}';
 
     /**
      * The console command description.
@@ -50,21 +50,19 @@ class CreateMyAccount extends Command
     public function handle()
     {
       $this->info(date('r').' Create My Account...');
+      // print_r($this->argument());
+      $email = $this->argument('email');
+      $password = $this->argument('password');
 
-      // $this->info("email: ".$this->option('email'));
-      // $this->info("password: ".$this->option('password'));
-
-      $this->createMyAccount();
+      $this->createMyAccount($email, $password);
     }
 
-    private function createMyAccount()
+    private function createMyAccount($email, $password)
     {
-      $email = 'badshah6@yexample.com';
-      $password = 'Password';
+      $this->email = $email;
+      $this->password = $password;
 
       $user = User::find($email);
-      // dd($user);
-
 
       if(!$user) {
         $this->info(date('r').' Creating Account and Company...');
@@ -74,6 +72,7 @@ class CreateMyAccount extends Command
         ]);
 
         $account->default_company_id = $company->id;
+        $account->save();
 
         $this->info(date('r').' Creating User...');
 
@@ -98,9 +97,9 @@ class CreateMyAccount extends Command
         $company_token->token = Str::random(64);
         $company_token->is_system = true;
 
-        // saveAll($account, $company_token);
-        $account->save();
         $company_token->save();
+
+        // $this->saveAll($account, $company_token);
 
       } else {
         $this->info(date('r').' User already created...');
@@ -108,14 +107,12 @@ class CreateMyAccount extends Command
 
     }
 
-    //
-    // private function saveAll($first, $second)
-    // {
+    // private function saveAll($first, $second) {
     //   $this->account = $first;
     //   $this->company_token = $second;
     //
-    //   $this->account->save();
-    //   $this->company_token->save();
-    //
+    //   $account->save();
+    //   $company_token->save();
     // }
+
 }

@@ -34,7 +34,8 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        Commands\CreateMyAccount::class
+        Commands\CreateMyAccount::class,
+        Commands\CreateMyTestAccount::class
     ];
 
     /**
