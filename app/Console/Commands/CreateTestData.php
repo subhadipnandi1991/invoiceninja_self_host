@@ -1,5 +1,5 @@
 <?php
-/**-
+/**
  * Invoice Ninja (https://invoiceninja.com).
  *
  * @link https://github.com/invoiceninja/invoiceninja source repository
@@ -44,6 +44,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
 
+
 class CreateTestData extends Command
 {
     use MakesHash, GeneratesCounter;
@@ -84,25 +85,10 @@ class CreateTestData extends Command
 
         $this->warmCache();
 
-        // $this->createSmallAccount();
-        $this->createMediumAccount();
+        $this->createSmallAccount();
+        // $this->createMediumAccount();
         // $this->createLargeAccount();
-        // $this->createPassword();
     }
-
-    private function createPassword() {
-
-      $user = User::whereEmail('medium@example.com')->first();
-      // dd($user);
-
-      if($user) {
-        $this->info('Updating Passowrd for Medium Account');
-
-        $user->password = Hash::make('Password1');
-        $user->save();
-      }
-    }
-
 
     private function createSmallAccount()
     {
@@ -123,7 +109,7 @@ class CreateTestData extends Command
             $user = User::factory()->create([
                 'account_id' => $account->id,
                 'email' => 'small@example.com',
-                'password'=> Hash::make('Password0'),
+                'password' => Hash::make('password'),
                 'confirmation_code' => $this->createDbHash(config('database.default')),
             ]);
         }
@@ -165,8 +151,8 @@ class CreateTestData extends Command
         for ($x = 0; $x < $this->count; $x++) {
             $client = $company->clients->random();
 
-            $this->info('creating invoice for client #'.$client->id);
-            $this->createInvoice($client);
+            // $this->info('creating invoice for client #'.$client->id);
+            // $this->createInvoice($client);
 
             $client = $company->clients->random();
 
@@ -200,7 +186,6 @@ class CreateTestData extends Command
         }
     }
 
-
     private function createMediumAccount()
     {
         $this->info('Creating Medium Account and Company');
@@ -216,8 +201,6 @@ class CreateTestData extends Command
 
         $user = User::whereEmail('medium@example.com')->first();
 
-
-
         if (! $user) {
             $user = User::factory()->create([
                 'account_id' => $account->id,
@@ -225,9 +208,6 @@ class CreateTestData extends Command
                 'confirmation_code' => $this->createDbHash(config('database.default')),
             ]);
         }
-
-        $user->password = Hash::make('Password1');
-        $user->save();
 
         $company_token = new CompanyToken;
         $company_token->user_id = $user->id;
@@ -248,12 +228,12 @@ class CreateTestData extends Command
             'settings' => null,
         ]);
 
-        Product::factory()->count(5)->create([
+        Product::factory()->count(50)->create([
                 'user_id' => $user->id,
                 'company_id' => $company->id,
             ]);
 
-        $this->count = $this->count * 5;
+        $this->count = $this->count * 10;
 
         $this->info('Creating '.$this->count.' clients');
 
@@ -264,7 +244,7 @@ class CreateTestData extends Command
             $this->createClient($company, $user);
         }
 
-        for ($x = 0; $x < $this->count * 5; $x++) {
+        for ($x = 0; $x < $this->count * 100; $x++) {
             $client = $company->clients->random();
 
             $this->info('creating invoice for client #'.$client->id);

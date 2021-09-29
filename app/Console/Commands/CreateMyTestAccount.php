@@ -101,14 +101,17 @@ class CreateMyTestAccount extends Command
       $account->save();
 
 
-      $user = User::whereEmail('badshah@myexample.com')->first();
+      $user = User::whereEmail('badshah@example.com')->first();
+
       // $this->info($user);
+      //
+      // die();
       // dd($user);
 
       if (!$user) {
         $user = User::factory()->create([
           'account_id' => $account->id,
-          'email' => 'badshah@myexample.com',
+          'email' => 'badshah@example.com',
           'confirmation_code' => $this->createDbHash(config('database.default')),
           'email_verified_at' => now(),
           'first_name'        => 'Badshah',
@@ -117,7 +120,7 @@ class CreateMyTestAccount extends Command
         ]);
       }
 
-
+      //
       if($user) {
         $user->password = Hash::make('Password2');
         $user->save();
@@ -150,7 +153,7 @@ class CreateMyTestAccount extends Command
               'company_id' => $company->id,
           ]);
 
-      $this->count = $this->count * 5;
+      // $this->count = $this->count * 5;
 
       $this->info('Creating '.$this->count.' clients');
 
@@ -160,7 +163,7 @@ class CreateMyTestAccount extends Command
           $this->createClient($company, $user);
       }
 
-      for ($x = 0; $x < $this->count * 10; $x++) {
+      for ($x = 0; $x < $this->count; $x++) {
           $client = $company->clients->random();
 
           $this->info('creating invoice for client #'.$client->id);
